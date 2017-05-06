@@ -1,0 +1,25 @@
+version: '2'
+services:
+ db:
+   image: mysql
+   environment:
+     - MYSQL_ROOT_PASSWORD=somerandpass
+     - MYSQL_DATABASE=testapi
+     - MYSQL_USER=testuser
+     - MYSQL_PASSWORD=testpassword
+   ports:
+      - "3306:3306"
+ api:
+   build: .
+   command: entrypoint.sh
+   ports:
+     - "8000:8000"
+   depends_on:
+     - db
+   links:
+     - db
+   environment:
+       - DB_NAME=testapi
+       - DB_USER=testuser
+       - DB_PASSWORD=testpassword
+       - DB_HOST=db
