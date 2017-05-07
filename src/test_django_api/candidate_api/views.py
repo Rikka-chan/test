@@ -12,6 +12,10 @@ class CandidateList(APIView):
     """
     def get(self, request, format=None):
         candidates = Candidate.objects.all()
+        if request.query_params and 'short' in request.query_params:
+            result = [candidate.id for candidate in candidates]
+            return Response(result)
+
         serializer = CandidateSerializer(candidates, many=True)
         return Response(serializer.data)
 
@@ -21,6 +25,7 @@ class CandidateList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 class CandidateDetail(APIView):
     """
